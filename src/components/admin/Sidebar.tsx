@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAdminStore } from '@/store/adminStore';
 import { authService } from '@/services/auth.service';
+import { ActiveBoothIndicator } from './ActiveBoothIndicator';
 
 const navItems = [
   { path: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -37,6 +38,10 @@ export function Sidebar() {
           Pixxel8
         </h1>
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Admin Portal</p>
+      </div>
+
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <ActiveBoothIndicator />
       </div>
 
       <nav className="flex-1 p-4 space-y-2">

@@ -32,7 +32,8 @@ export function LoginPage() {
           name: response.data.user.name,
           role: response.data.user.role,
         });
-        navigate('/admin');
+        // Navigate to machines page for booth selection
+        navigate('/admin/machines');
       } else {
         setError(response.message || 'Invalid credentials');
       }

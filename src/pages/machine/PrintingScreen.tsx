@@ -2,9 +2,10 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Printer, Sparkles, Zap } from 'lucide-react';
-import { NeonWaves } from '@/components/effects/NeonWaves';
-import { ParticleField } from '@/components/effects/ParticleField';
+import { VideoBackground } from '@/components/effects/VideoBackground';
 import { useMachineStore } from '@/store/machineStore';
+
+const backgroundVideo = '/src/assets/backgroundVideo.mp4';
 
 export function PrintingScreen() {
   const navigate = useNavigate();
@@ -36,87 +37,157 @@ export function PrintingScreen() {
 
   return (
     <div className="relative min-h-screen bg-black overflow-hidden flex items-center justify-center p-8">
-      {/* Futuristic Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-fuchsia-900 to-cyan-900" />
-      <NeonWaves />
-      <ParticleField count={40} colors={['#00f0ff', '#ff00ff', '#8b5cf6', '#fbbf24']} speed="fast" />
-      
-      {/* Radial Glows */}
-      <motion.div
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-[120px] opacity-30"
-        animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 3, repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-500 rounded-full blur-[120px] opacity-30"
-        animate={{ scale: [1.3, 1, 1.3], opacity: [0.5, 0.3, 0.5] }}
-        transition={{ duration: 4, repeat: Infinity }}
+      {/* Video Background - Matches other pages */}
+      <VideoBackground
+        videoSrc={backgroundVideo}
+        overlayOpacity={0.7}
+        enableVignette={true}
       />
 
       <div className="relative z-10 text-center max-w-4xl">
-        {/* Animated Printer Icon */}
+        {/* Creative Photo Assembly Animation */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', damping: 10 }}
-          className="mb-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mb-12 relative h-96"
         >
-          <motion.div
-            className="relative inline-block"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            {/* Printer with Glow */}
-            <motion.div
-              animate={{
-                filter: [
-                  'drop-shadow(0 0 30px rgba(0,240,255,0.6))',
-                  'drop-shadow(0 0 50px rgba(255,0,255,0.8))',
-                  'drop-shadow(0 0 30px rgba(0,240,255,0.6))',
-                ]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <Printer className="w-48 h-48 text-white" strokeWidth={2} />
-            </motion.div>
+          {/* Flying Photos Animation */}
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* Multiple photo frames flying in and assembling */}
+            {[0, 1, 2, 3].map((i) => (
+              <motion.div
+                key={i}
+                className="absolute w-32 h-32 bg-gradient-to-br from-cyan-400/30 to-fuchsia-400/30 backdrop-blur-sm rounded-2xl border-4 border-white/40 shadow-2xl"
+                initial={{ 
+                  x: (i % 2 === 0 ? -1 : 1) * 800,
+                  y: (i < 2 ? -1 : 1) * 400,
+                  rotate: (i % 2 === 0 ? -1 : 1) * 180,
+                  scale: 0.3,
+                  opacity: 0
+                }}
+                animate={{ 
+                  x: (i % 2 === 0 ? -1 : 1) * 80,
+                  y: (i < 2 ? -1 : 1) * 80,
+                  rotate: 0,
+                  scale: 1,
+                  opacity: 1
+                }}
+                transition={{
+                  duration: 1.5,
+                  delay: i * 0.2,
+                  type: 'spring',
+                  stiffness: 100,
+                  damping: 15
+                }}
+                style={{
+                  boxShadow: '0 0 40px rgba(0,240,255,0.6), inset 0 0 20px rgba(255,255,255,0.2)'
+                }}
+              >
+                {/* Photo placeholder with sparkle */}
+                <motion.div
+                  className="w-full h-full flex items-center justify-center"
+                  animate={{
+                    background: [
+                      'linear-gradient(135deg, rgba(0,240,255,0.3) 0%, rgba(255,0,255,0.3) 100%)',
+                      'linear-gradient(135deg, rgba(255,0,255,0.3) 0%, rgba(251,191,36,0.3) 100%)',
+                      'linear-gradient(135deg, rgba(0,240,255,0.3) 0%, rgba(255,0,255,0.3) 100%)',
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Sparkles className="w-12 h-12 text-white" />
+                </motion.div>
+              </motion.div>
+            ))}
             
-            {/* Paper Coming Out Animation */}
+            {/* Central Printer Icon */}
             <motion.div
-              className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-40 bg-white rounded-lg shadow-2xl"
-              initial={{ y: -40, opacity: 0 }}
-              animate={{ 
-                y: [0, 20, 0],
-                opacity: [0.5, 1, 0.5]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-              style={{
-                boxShadow: '0 0 30px rgba(0,240,255,0.5)'
-              }}
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 0.8, type: 'spring', stiffness: 200 }}
+              className="relative z-10"
             >
-              {/* Sparkles on Paper */}
-              {[0, 1, 2].map((i) => (
+              <motion.div
+                animate={{
+                  filter: [
+                    'drop-shadow(0 0 30px rgba(0,240,255,0.8))',
+                    'drop-shadow(0 0 50px rgba(255,0,255,1))',
+                    'drop-shadow(0 0 30px rgba(0,240,255,0.8))',
+                  ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <Printer className="w-32 h-32 text-white" strokeWidth={2.5} />
+              </motion.div>
+              
+              {/* Orbiting Sparkles */}
+              {[0, 1, 2, 3, 4, 5].map((i) => (
                 <motion.div
                   key={i}
-                  className="absolute"
-                  style={{
-                    top: `${30 + i * 20}%`,
-                    left: `${20 + i * 30}%`,
-                  }}
+                  className="absolute top-1/2 left-1/2"
                   animate={{
-                    scale: [0, 1, 0],
-                    rotate: [0, 180, 360],
+                    rotate: 360,
+                    x: Math.cos((i * Math.PI) / 3) * 100,
+                    y: Math.sin((i * Math.PI) / 3) * 100,
                   }}
                   transition={{
-                    duration: 1.5,
+                    duration: 3,
                     repeat: Infinity,
-                    delay: i * 0.3,
+                    ease: 'linear',
+                    delay: i * 0.1,
                   }}
                 >
-                  <Sparkles className="w-4 h-4 text-yellow-400" />
+                  <Zap className="w-6 h-6 text-yellow-400" />
                 </motion.div>
               ))}
             </motion.div>
-          </motion.div>
+            
+            {/* Final Print Emerging */}
+            <motion.div
+              className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-64 bg-white rounded-2xl shadow-2xl overflow-hidden"
+              initial={{ y: 100, opacity: 0, scale: 0.8 }}
+              animate={{ 
+                y: progress > 50 ? 0 : 100,
+                opacity: progress > 50 ? 1 : 0,
+                scale: progress > 50 ? 1 : 0.8,
+              }}
+              transition={{ type: 'spring', stiffness: 100 }}
+              style={{
+                boxShadow: '0 0 60px rgba(0,240,255,0.8), 0 20px 40px rgba(0,0,0,0.5)'
+              }}
+            >
+              {/* Grid pattern on print */}
+              <div className="w-full h-full bg-gradient-to-br from-cyan-100 to-fuchsia-100 p-2">
+                <div className="grid grid-cols-2 gap-1 h-full">
+                  {[0, 1, 2, 3].map((i) => (
+                    <motion.div
+                      key={i}
+                      className="bg-gradient-to-br from-cyan-200 to-fuchsia-200 rounded-lg"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ 
+                        opacity: progress > 60 + i * 5 ? 1 : 0,
+                        scale: progress > 60 + i * 5 ? 1 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  ))}
+                </div>
+              </div>
+              
+              {/* Shine effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-50"
+                animate={{
+                  x: ['-100%', '200%'],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'linear',
+                }}
+              />
+            </motion.div>
+          </div>
         </motion.div>
 
         {/* Title with Neon Glow */}

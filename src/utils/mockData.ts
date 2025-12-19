@@ -1,4 +1,6 @@
 import type { PhotoLayout, Machine } from '@/types';
+import type { ContentItem } from '@/types/content.types';
+import type { AnalyticsSummary, PrintTrend, BoothAnalytics, ModeComparison } from '@/types/analytics.types';
 
 export const MOCK_LAYOUTS: PhotoLayout[] = [
   {
@@ -142,5 +144,175 @@ export const MOCK_MACHINES: Machine[] = [
       temperature: 42,
       errors: ['Low paper', 'Low ink'],
     },
+  },
+];
+
+// MOCK CONTENT DATA
+export const MOCK_CONTENT: ContentItem[] = [
+  {
+    id: 'content-1',
+    name: 'Sunset Beach Background',
+    type: 'background',
+    status: 'active',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400',
+    fileUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+    fileType: 'image',
+    assignment: 'all',
+    assignedBoothIds: [],
+    createdAt: '2024-01-15T10:00:00Z',
+    updatedAt: '2024-01-15T10:00:00Z',
+    fileSize: 2048000,
+    dimensions: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'content-2',
+    name: 'Party Confetti Overlay',
+    type: 'overlay',
+    status: 'active',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400',
+    fileUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30',
+    fileType: 'image',
+    assignment: 'specific',
+    assignedBoothIds: ['booth-1', 'booth-2'],
+    createdAt: '2024-01-16T11:00:00Z',
+    updatedAt: '2024-01-16T11:00:00Z',
+    fileSize: 1024000,
+    dimensions: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'content-3',
+    name: 'Elegant Frame Border',
+    type: 'frame',
+    status: 'active',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400',
+    fileUrl: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634',
+    fileType: 'image',
+    assignment: 'all',
+    assignedBoothIds: [],
+    createdAt: '2024-01-17T12:00:00Z',
+    updatedAt: '2024-01-17T12:00:00Z',
+    fileSize: 512000,
+    dimensions: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'content-4',
+    name: 'Neon Lights Background',
+    type: 'background',
+    status: 'disabled',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400',
+    fileUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819',
+    fileType: 'image',
+    assignment: 'specific',
+    assignedBoothIds: ['booth-3'],
+    createdAt: '2024-01-18T13:00:00Z',
+    updatedAt: '2024-01-18T13:00:00Z',
+    fileSize: 3072000,
+    dimensions: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'content-5',
+    name: 'Sparkle Effect Overlay',
+    type: 'overlay',
+    status: 'active',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1482160549825-59d1b23cb208?w=400',
+    fileUrl: 'https://images.unsplash.com/photo-1482160549825-59d1b23cb208',
+    fileType: 'video',
+    assignment: 'all',
+    assignedBoothIds: [],
+    createdAt: '2024-01-19T14:00:00Z',
+    updatedAt: '2024-01-19T14:00:00Z',
+    fileSize: 5120000,
+  },
+  {
+    id: 'content-6',
+    name: 'Vintage Film Frame',
+    type: 'frame',
+    status: 'disabled',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400',
+    fileUrl: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26',
+    fileType: 'image',
+    assignment: 'specific',
+    assignedBoothIds: ['booth-2'],
+    createdAt: '2024-01-20T15:00:00Z',
+    updatedAt: '2024-01-20T15:00:00Z',
+    fileSize: 768000,
+    dimensions: { width: 1920, height: 1080 },
+  },
+];
+
+// MOCK ANALYTICS DATA
+export const MOCK_ANALYTICS_SUMMARY: AnalyticsSummary = {
+  totalPrints: 1247,
+  eventPrints: 823,
+  normalPrints: 424,
+  activeBooths: 3,
+  totalBooths: 4,
+  todayPrints: 87,
+  weekPrints: 542,
+  monthPrints: 1247,
+};
+
+export const MOCK_PRINT_TRENDS: PrintTrend[] = Array.from({ length: 30 }, (_, i) => {
+  const date = new Date();
+  date.setDate(date.getDate() - (29 - i));
+  const prints = Math.floor(Math.random() * 50) + 20;
+  const eventPrints = Math.floor(prints * 0.65);
+  return {
+    date: date.toISOString().split('T')[0],
+    prints,
+    eventPrints,
+    normalPrints: prints - eventPrints,
+  };
+});
+
+export const MOCK_BOOTH_ANALYTICS: BoothAnalytics[] = [
+  {
+    boothId: 'booth-1',
+    boothName: 'Main Hall Booth',
+    totalPrints: 487,
+    eventPrints: 312,
+    normalPrints: 175,
+    avgSessionTime: 245,
+    lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    boothId: 'booth-2',
+    boothName: 'VIP Lounge Booth',
+    totalPrints: 356,
+    eventPrints: 289,
+    normalPrints: 67,
+    avgSessionTime: 312,
+    lastActive: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    boothId: 'booth-3',
+    boothName: 'Garden Booth',
+    totalPrints: 289,
+    eventPrints: 156,
+    normalPrints: 133,
+    avgSessionTime: 198,
+    lastActive: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    boothId: 'booth-4',
+    boothName: 'Rooftop Booth',
+    totalPrints: 115,
+    eventPrints: 66,
+    normalPrints: 49,
+    avgSessionTime: 267,
+    lastActive: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+export const MOCK_MODE_COMPARISON: ModeComparison[] = [
+  {
+    mode: 'event',
+    prints: 823,
+    percentage: 66,
+  },
+  {
+    mode: 'normal',
+    prints: 424,
+    percentage: 34,
   },
 ];

@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Star, Camera, Sparkles, Zap } from 'lucide-react';
 import { Confetti } from '@/components/effects/Confetti';
-import { NeonWaves } from '@/components/effects/NeonWaves';
-import { ParticleField } from '@/components/effects/ParticleField';
+import { VideoBackground } from '@/components/effects/VideoBackground';
 import { useMachineStore } from '@/store/machineStore';
+
+const backgroundVideo = '/src/assets/backgroundVideo.mp4';
 
 export function ThankYouScreen() {
   const navigate = useNavigate();
@@ -30,31 +31,11 @@ export function ThankYouScreen() {
 
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
-      {/* Futuristic Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-fuchsia-900 to-cyan-900" />
-      <NeonWaves />
-      <ParticleField count={50} colors={['#00f0ff', '#ff00ff', '#8b5cf6', '#fbbf24', '#10b981']} speed="medium" />
-      
-      {/* Massive Radial Glows */}
-      <motion.div
-        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-cyan-500 rounded-full blur-[150px] opacity-40"
-        animate={{ 
-          scale: [1, 1.3, 1],
-          opacity: [0.4, 0.6, 0.4],
-          x: [0, 50, 0],
-          y: [0, -50, 0]
-        }}
-        transition={{ duration: 5, repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-fuchsia-500 rounded-full blur-[150px] opacity-40"
-        animate={{ 
-          scale: [1.3, 1, 1.3],
-          opacity: [0.6, 0.4, 0.6],
-          x: [0, -50, 0],
-          y: [0, 50, 0]
-        }}
-        transition={{ duration: 6, repeat: Infinity }}
+      {/* Video Background - Matches other pages */}
+      <VideoBackground
+        videoSrc={backgroundVideo}
+        overlayOpacity={0.6}
+        enableVignette={true}
       />
 
       {/* Epic Confetti */}

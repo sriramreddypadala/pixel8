@@ -4,17 +4,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { StillCountSelector } from '@/components/machine/StillCountSelector';
 import { GridSelector } from '@/components/machine/GridSelector';
-import { NeonWaves } from '@/components/effects/NeonWaves';
-import { ParticleField } from '@/components/effects/ParticleField';
+import { VideoBackground } from '@/components/effects/VideoBackground';
+import { GlassPanel } from '@/components/ui/GlassPanel';
+import { GlassButton } from '@/components/ui/GlassButton';
 import { useMachineStore } from '@/store/machineStore';
 import { useGridStore } from '@/store/gridStore';
+
+const backgroundVideo = '/src/assets/backgroundVideo.mp4';
 
 export function SetupScreen() {
   const navigate = useNavigate();
   const { startSession } = useMachineStore();
-  const { templates, activeGrid } = useGridStore();
+  const { templates } = useGridStore();
   
-  const [step, setStep] = useState<'count' | 'grid'>(activeGrid ? 'grid' : 'count');
+  const [step, setStep] = useState<'count' | 'grid'>('count');
   const [selectedStillCount, setSelectedStillCount] = useState<number | null>(null);
   const [selectedGridId, setSelectedGridId] = useState<string | null>(null);
   const [copies, setCopies] = useState(1);
@@ -62,6 +65,12 @@ export function SetupScreen() {
     if (!selectedGrid) return;
 
     startSession();
+    // Set the selected grid layout in session
+    const { setSessionLayout } = useMachineStore.getState();
+    // Convert GridTemplate to PhotoLayout format if needed
+    const layoutData: any = selectedGrid;
+    setSessionLayout(layoutData);
+    
     navigate('/machine/capture');
   };
 
@@ -69,78 +78,51 @@ export function SetupScreen() {
 
   return (
     <div className="relative min-h-screen bg-black overflow-hidden flex items-center justify-center p-8">
-      {/* Futuristic Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-fuchsia-900 to-cyan-900" />
-      <NeonWaves />
-      <ParticleField count={30} colors={['#00f0ff', '#ff00ff', '#8b5cf6']} speed="medium" />
+      <VideoBackground
+        videoSrc={backgroundVideo}
+        overlayOpacity={0.7}
+        enableVignette={true}
+      />
       
-      {/* Radial Glows */}
       <motion.div
-        className="absolute top-1/3 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-[120px] opacity-30"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.4, 0.3] }}
-        transition={{ duration: 5, repeat: Infinity }}
+        className="absolute top-1/4 right-1/3 w-[500px] h-[500px] bg-blue-500/15 rounded-full blur-[100px]"
+        animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.25, 0.15] }}
+        transition={{ duration: 7, repeat: Infinity }}
       />
-      <motion.div
-        className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-fuchsia-500 rounded-full blur-[120px] opacity-30"
-        animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.3, 0.4] }}
-        transition={{ duration: 6, repeat: Infinity }}
-      />
-      <div className="relative z-10 w-full max-w-6xl">
-        {/* Progress Indicator with Neon Glow */}
+      <div className="relative z-20 w-full max-w-6xl">
         <motion.div 
           className="flex items-center justify-center gap-6 mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <motion.div 
-            className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-black border-4 ${
-              step === 'count' 
-                ? 'bg-gradient-to-br from-cyan-400 to-fuchsia-500 text-white border-cyan-400' 
-                : 'bg-white/10 text-white/50 border-white/30'
+          <GlassPanel
+            className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-black border-2 ${
+              step === 'count' ? 'border-white/60' : 'border-white/20'
             }`}
-            animate={step === 'count' ? {
-              boxShadow: [
-                '0 0 20px rgba(0,240,255,0.6)',
-                '0 0 40px rgba(255,0,255,0.8)',
-                '0 0 20px rgba(0,240,255,0.6)',
-              ]
-            } : {}}
-            transition={{ duration: 2, repeat: Infinity }}
+            blur="medium"
+            opacity={step === 'count' ? 0.9 : 0.5}
+            glow={step === 'count'}
           >
             1
-          </motion.div>
-          <motion.div 
-            className="w-24 h-2 rounded-full overflow-hidden bg-white/20"
-            animate={{
-              background: step === 'grid' 
-                ? 'linear-gradient(90deg, rgba(0,240,255,0.8) 0%, rgba(255,0,255,0.8) 100%)'
-                : 'rgba(255,255,255,0.2)'
-            }}
-          >
+          </GlassPanel>
+          <div className="w-24 h-1 rounded-full bg-white/20 overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-cyan-400 to-fuchsia-500"
+              className="h-full bg-white/60"
               initial={{ width: '0%' }}
               animate={{ width: step === 'grid' ? '100%' : '0%' }}
               transition={{ duration: 0.5 }}
             />
-          </motion.div>
-          <motion.div 
-            className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-black border-4 ${
-              step === 'grid'
-                ? 'bg-gradient-to-br from-cyan-400 to-fuchsia-500 text-white border-cyan-400'
-                : 'bg-white/10 text-white/50 border-white/30'
+          </div>
+          <GlassPanel
+            className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-black border-2 ${
+              step === 'grid' ? 'border-white/60' : 'border-white/20'
             }`}
-            animate={step === 'grid' ? {
-              boxShadow: [
-                '0 0 20px rgba(0,240,255,0.6)',
-                '0 0 40px rgba(255,0,255,0.8)',
-                '0 0 20px rgba(0,240,255,0.6)',
-              ]
-            } : {}}
-            transition={{ duration: 2, repeat: Infinity }}
+            blur="medium"
+            opacity={step === 'grid' ? 0.9 : 0.5}
+            glow={step === 'grid'}
           >
             2
-          </motion.div>
+          </GlassPanel>
         </motion.div>
 
         {/* Content */}
@@ -148,50 +130,59 @@ export function SetupScreen() {
           {step === 'count' ? (
             <motion.div
               key="count"
-              initial={{ opacity: 0, x: -30, scale: 0.95 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 30, scale: 0.95 }}
-              transition={{ type: 'spring', damping: 20 }}
-              className="bg-white/5 backdrop-blur-xl rounded-3xl p-10 border-2 border-white/20"
-              style={{
-                boxShadow: '0 0 60px rgba(0,240,255,0.2), inset 0 0 60px rgba(255,255,255,0.05)'
-              }}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 30 }}
+              transition={{ duration: 0.4 }}
             >
-              <StillCountSelector
-                selectedCount={selectedStillCount}
-                onSelect={handleStillCountSelect}
-                availableCounts={availableStillCounts}
-              />
+              <GlassPanel
+                className="rounded-3xl p-10"
+                blur="heavy"
+                opacity={0.85}
+                border={true}
+                glow={true}
+              >
+                <StillCountSelector
+                  selectedCount={selectedStillCount}
+                  onSelect={handleStillCountSelect}
+                  availableCounts={availableStillCounts}
+                />
+              </GlassPanel>
             </motion.div>
           ) : (
             <motion.div
               key="grid"
-              initial={{ opacity: 0, x: 30, scale: 0.95 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: -30, scale: 0.95 }}
-              transition={{ type: 'spring', damping: 20 }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.4 }}
               className="space-y-6"
             >
-              <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-10 border-2 border-white/20" style={{
-                boxShadow: '0 0 60px rgba(255,0,255,0.2), inset 0 0 60px rgba(255,255,255,0.05)'
-              }}>
+              <GlassPanel
+                className="rounded-3xl p-10"
+                blur="heavy"
+                opacity={0.85}
+                border={true}
+                glow={true}
+              >
                 <GridSelector
                   grids={filteredGrids}
                   selectedGridId={selectedGridId}
                   onSelect={handleGridSelect}
                 />
-              </div>
+              </GlassPanel>
 
               {/* Copies & Price */}
               {selectedGrid && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ type: 'spring' }}
-                  className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border-2 border-cyan-400/50"
-                  style={{
-                    boxShadow: '0 0 40px rgba(0,240,255,0.3), inset 0 0 40px rgba(0,240,255,0.1)'
-                  }}
+                <GlassPanel
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="rounded-3xl p-8"
+                  blur="heavy"
+                  opacity={0.85}
+                  border={true}
+                  glow={true}
                 >
                   <div className="flex items-center justify-between">
                     <div>
@@ -233,7 +224,7 @@ export function SetupScreen() {
                       </motion.p>
                     </div>
                   </div>
-                </motion.div>
+                </GlassPanel>
               )}
             </motion.div>
           )}
@@ -246,31 +237,32 @@ export function SetupScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <motion.button
+          <GlassButton
             onClick={handleBack}
-            whileHover={{ scale: 1.05, x: -5 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-10 py-6 rounded-2xl bg-white/10 backdrop-blur-md border-2 border-white/30 text-white text-xl font-bold flex items-center gap-3 hover:bg-white/20 transition-all"
+            variant="secondary"
+            size="lg"
+            icon={ArrowLeft}
+            className="px-10"
           >
-            <ArrowLeft className="w-6 h-6" />
             BACK
-          </motion.button>
+          </GlassButton>
           
           {step === 'grid' && canContinue && (
-            <motion.button
-              onClick={handleContinue}
-              initial={{ scale: 0.9, opacity: 0 }}
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex-1 px-12 py-6 rounded-2xl bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-violet-500 text-white text-2xl font-black flex items-center justify-center gap-4"
-              style={{
-                boxShadow: '0 0 40px rgba(0,240,255,0.6), 0 0 80px rgba(255,0,255,0.4)'
-              }}
+              className="flex-1"
             >
-              LET'S GO! 🚀
-              <ArrowRight className="w-8 h-8" />
-            </motion.button>
+              <GlassButton
+                onClick={handleContinue}
+                variant="primary"
+                size="lg"
+                pulse={true}
+                className="w-full text-2xl font-black"
+              >
+                LET'S GO! 🚀 <ArrowRight className="w-8 h-8 ml-2" />
+              </GlassButton>
+            </motion.div>
           )}
         </motion.div>
       </div>

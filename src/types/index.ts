@@ -15,6 +15,7 @@ export type PhotoLayout = {
   name: string;
   type: '2x2' | '3x3' | '4x4' | 'strip' | 'single';
   photoCount: number;
+  stillCount: number;  // Number of photos to capture (1, 2, 4, 8)
   thumbnailUrl: string;
   price: number;
   visible: boolean;
